@@ -1,0 +1,36 @@
+--
+-- Ensure that the database and admin user exist
+-- Execute this script by calling psql as follows:
+--
+--	psql -h HostNameHere -U postgres -v password=JclAdminPasswordHere -f ThisScriptName.psql
+--
+
+
+-- Create the DB if it doesn't exist.  Tricky because you're not allowed to
+-- do it with dynamic sql.  Use "\gexec" psql trick documented here:
+--   https://stackoverflow.com/a/18389184
+select 'create database jcl;'
+where not exists (
+	select *
+	from pg_database
+	where datname = 'jcl')\gexec
+;
+
+--
+-- Create an admin user for the jcl db.  Tricky because the "do" block can't
+-- reference the variables passed in on the commandline, so use session vars
+-- as documented here:
+--	https://stackoverflow.com/a/24076483
+-- Also, the password must be a string literal, so have to use dynamic sql
+-- as documented here:
+--	https://stackoverflow.com/a/49076422
+
+set vars.pw to :'password';
+do $$
+begin
+	if (select count(*) from pg_user where usename = 'jcladmin') = 0 then
+		execute format('create user jcladmin password %L',current_setting('vars.pw'));
+	end if;
+
+	alter database jcl owner to jcladmin;
+end $$;
