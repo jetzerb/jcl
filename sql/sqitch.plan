@@ -10,3 +10,4 @@ Views/Student_View [Tables/Student] 2020-01-26T01:09:40Z Jetzer, Bill <jetzerb@s
 Tables/Test_Result 2020-01-26T02:45:01Z Jetzer, Bill <jetzerb@sva.com> # initial conversion from mssql
 Views/Test_Result_View [Tables/Test_Result] 2020-01-26T03:11:56Z Jetzer, Bill <jetzerb@sva.com> # initial conversion from mssql
 Functions/Results_Participation [Tables/Student Tables/School Tables/Level Views/Test_Result_View] 2020-01-27T00:29:28Z Jetzer, Bill <jetzerb@sva.com> # initial conversion from mssql
+Functions/Results_Qual_Quant [Views/Test_Result_View Tables/Test_Result Tables/Competition Tables/Student Tables/Level Tables/School] 2020-01-29T00:45:00Z Jetzer, Bill <jetzerb@sva.com> # initial conversion
