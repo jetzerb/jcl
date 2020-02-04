@@ -18,12 +18,12 @@ performed:
 ### Configuration and Master Data Edit Checks
 Here's the list of edit checks/cleanup for config and master data:
 
-Level | Competition | School | Student | Edit Check
-:---: | :---------: | :----: | :-----: | ----------
-  X   |      X      |   X    |    X  : | duplicate record
-  X   |      X      |   X    |    X  : | leading and trailing spaces on all fields
-  X   |      X      |   X    |    X  : | non-alpha name
-      |             |        |    X  : | ID / Level mismatch
+|Level | Competition | School | Student | Edit Check
+|:---: | :---------: | :----: | :-----: | ----------
+|  X   |      X      |   X    |    X  : | duplicate record
+|  X   |      X      |   X    |    X  : | leading and trailing spaces on all fields
+|  X   |      X      |   X    |    X  : | non-alpha name
+|      |             |        |    X  : | ID / Level mismatch
 
 ### Test Result / Score Edit Checks
 And here's the list of edit checks for test result data
@@ -35,7 +35,7 @@ And here's the list of edit checks for test result data
 - Duplicate results: student takes a test multiple times, or two students fill
   in the same student ID.
   - If possible, the student name should be checked against the ID on the test
-    form to guard against typos (_e.g. 4012 vs 4021)
+    form to guard against typos (_e.g._ 4012 vs 4021)
   - Otherwise we ignore all but the highest score
 - Score exceeds maximum possible (Need new attribute on Competition table)
 
@@ -64,7 +64,7 @@ To get the desired list of reports in the most efficient way possible:
    - initialize variables:
      - array of scores: [0] = infinity, [1] - [10] zero
      - current "place": 0
-   - if score on current row < scores[place] then
+   - if score on current row is less than scores[place] then
      - increment place
      - set scores[place] = score from current row
      - set points earned on current row to `max(0,11-place)`
@@ -76,7 +76,7 @@ To get the desired list of reports in the most efficient way possible:
    - If student Id is not found in the test results, add student Id to a list of
      non-participating students
 1. For each student who did not participate
-   - Add a row with "<Student Did Not Participate>" as the Competition name
+   - Add a row with "{Student Did Not Participate}" as the Competition name
 1. Sort the Participation sheet by School, Level, Last Name, First Name,
    Competition. **This is the final Participation Report**
 1. Initialize associative array with all schools
@@ -117,3 +117,21 @@ To get the desired list of reports in the most efficient way possible:
 "small" sizes, and the qual/quant rankings were assigned separately by school
 size.  If that's the new norm, then we'll need a new attribute on the school
 table and will have to modify the School Standings report logic accordingly.
+
+> TODO: Investigate the Google Sheets [`QUERY`](https://support.google.com/docs/answer/3093343?hl=en) function to see how much of the
+above could be implemented using that.
+
+## Google Sheets
+
+### Spreadsheet Generator
+Create a "master" spreadsheet or a Google Form used to generate JCL
+spreadsheets.  Have a field holding the desired spreadsheet name, and some apps
+scripting to generate the spreadsheet.
+- [SpreadsheetApp](https://developers.google.com/apps-script/reference/spreadsheet/spreadsheet-app.html).[create(name)](https://developers.google.com/apps-script/reference/spreadsheet/spreadsheet-app.html#create(String))
+- [Spreadsheet](https://developers.google.com/apps-script/reference/spreadsheet/spreadsheet.html).[insertSheet(sheetName, sheetIndex, options)](https://developers.google.com/apps-script/reference/spreadsheet/spreadsheet.html#insertSheet(String,Integer,Object))
+  The options may not be useful at this point.  The only option that's
+  documented is to specify a template sheet, which we wouldn't use since all of
+  our sheets hold different types of data
+- Then use the [Sheet](https://developers.google.com/apps-script/reference/spreadsheet/sheet) object and associated methods to create the sheets:
+  - Headers
+  - Computed Columns (gray, warning if someone tries to modify them)
